@@ -1,0 +1,41 @@
+package kr.board.web;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.enterprise.inject.Model;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.nexacro.uiadapter17.spring.core.annotation.ParamDataSet;
+import com.nexacro.uiadapter17.spring.core.data.NexacroResult;
+
+import kr.board.service.BoardService;
+import kr.hcnc.service.HcncService;
+import lombok.RequiredArgsConstructor;
+
+@Controller
+public class BoardController {
+	
+	@Resource(name = "boardService")
+	public BoardService boardService;
+	
+	@RequestMapping(value="getBoardList.do")
+	public NexacroResult getBoardList(HashMap<String, Object> param) {
+		NexacroResult result = new NexacroResult();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		result.addDataSet("boardList", boardService.getBoardList(param));
+		
+		
+		return result;
+	}
+	
+	
+	
+	
+}

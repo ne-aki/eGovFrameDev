@@ -1,0 +1,19 @@
+package kr.hcnc.web;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.hcnc.service.HcncService;
+
+@Controller
+public class HcncController {
+	
+	@Resource(name = "hcncService")
+	private HcncService hcncService;
+	
+	@RequestMapping(value = "/selectBoardList.do")
+	public 
+
+}

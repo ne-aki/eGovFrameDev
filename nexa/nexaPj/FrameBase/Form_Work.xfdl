@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Form_Work" width="1280" height="720" titletext="Form_Work" onload="Form_Work_onload">
+    <Layouts>
+      <Layout width="1280" height="720" screenid="Desktop_screen">
+        <Combo id="cmbSearch" taborder="0" text="Combo00" left="20" top="105" width="200" height="80" innerdataset="dsSearchCombo" codecolumn="code" datacolumn="codeNm" onitemchanged="cmbSearch_onitemchanged" onkillfocus="cmbSearch_onkillfocus"/>
+        <Edit id="edtSearch" taborder="1" left="230" top="105" width="273" height="80" onkillfocus="edtSearch_onkillfocus"/>
+        <Button id="btnSearch" taborder="2" text="검색" left="517" top="105" width="103" height="76" onclick="btnSearch_onclick"/>
+        <Button id="btnInsert" taborder="3" text="신규작성" left="340" top="520" width="280" height="60" onclick="btnInsert_onclick"/>
+        <Button id="btnDelete" taborder="4" text="게시글 삭제" left="23" top="520" width="267" height="60" onclick="btnDelete_onclick"/>
+        <Grid id="grdList" taborder="5" left="20" top="195" width="600" height="300" binddataset="dsList" oncelldblclick="grdList_oncelldblclick">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="48"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row size="24" band="head"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell/>
+                <Cell col="1" text="BOARD_NO"/>
+                <Cell col="2" text="TITLE"/>
+                <Cell col="3" text="CONT"/>
+                <Cell col="4" text="WRITER"/>
+                <Cell col="5" text="MODIFIER"/>
+                <Cell col="6" text="REG_DT"/>
+                <Cell col="7" text="MOD_DT"/>
+              </Band>
+              <Band id="body">
+                <Cell edittype="checkbox" text="bind:CHK" displaytype="checkboxcontrol" checkboxfalsevalue="0" checkboxtruevalue="1"/>
+                <Cell col="1" text="bind:BOARD_NO"/>
+                <Cell col="2" text="bind:TITLE"/>
+                <Cell col="3" text="bind:CONT"/>
+                <Cell col="4" text="bind:WRITER"/>
+                <Cell col="5" text="bind:MODIFIER"/>
+                <Cell col="6" text="bind:REG_DT"/>
+                <Cell col="7" text="bind:MOD_DT"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Button id="btnCode" taborder="6" text="코드관리" left="702" top="183" width="129" height="153" onclick="btnCode_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[// 검색하는 이벤트
+this.btnSearch_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// combo box있는 code값
+	// edit에있는 검색값
+	// 데이터를 넘겨줄때는 parameter를 넘길 수 있고
+	// dataset을 만들어서 column을 지종한 후에 넘길 수도 있다.
+	var objApp = nexacro.getApplication();
+	var searchCmb 	= this.cmbSearch.value;
+	var searchVal = this.edtSearch.value;
+
+	this.dsSearch.setColumn(0, "searchCmb", searchCmb); 
+    this.dsSearch.setColumn(0, "searchVal", searchVal);
+
+// 	var.dsSearch.setCoulmn(0, "searchCmb", searchCmb); // 데이터셋에 값부여
+// 	var.dsSearch.setCoulmn(0, "searchVal", searchVal); // 데이터셋에 값부여
+
+	this.transaction( 
+				"selectList" 				// 서비스 ID
+				,"DataSrv::selectList.do" 	// 호출 URL http://localhost/nexaPj/
+				,"dsSearch=dsSearch" 		// 데이터를 넘길 dataset ([nexa] 보내는 datasetId = [java]에서 받는 datasetId ''(공백)을 사용하여 여러개 처리)
+				,"dsList=dsList" 			// 데이터를 받을 dataset ([naxa] 받는 datasetId = [java]에서 보내는 datasetId ''(공백)을 사용하여 여러개 처리)
+				,"searchCmb=" + searchCmb + " searchVal=" + searchVal // 파라미터로 넘길 값 (key=v)
+				,"fnCallBack"); 			// 함수 호출 콜백
+};	
+
+// 등록하는 화면으로 이동하는 이벤트
+this.btnInsert_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{	
+
+	var objParam = {
+		 "boardNo" : ""
+	}
+	
+   this.showPopup(objParam);
+};
+
+// 선택한 게시글을 삭제하는 이벤트
+this.btnDelete_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	
+	this.dsDelete.clearData();
+
+	// 해당하는 row의 값만큼 반복
+	for(var i =0; i < this.dsList.rowcount; i++) {
+		// 만약 dsList.getColumn의 i번째 행의 CHK값이 1 즉 체크가 되었으면
+		if (this.dsList.getColumn(i, "CHK") == 1) {
+			var numbers = this.dsDelete.addRow();
+			this.dsDelete.setColumn(numbers, "BOARD_NO", this.dsList.getColumn(i, "BOARD_NO")); 
+		}
+	}
+	
+	trace(this.dsDelete.saveXML(	));
+	
+	if(this.dsDelete.rowcount == 0) {
+			alert("삭제할 항목을 선택해 주세요.");
+			return;
+	}
+	
+	if (this.confirm("삭제하시겠습니까?")) {
+		this.transaction(
+			 "deleteBoardChecked" 				// 트랜잭션 별명
+			,"DataSrv::deleteBoardChecked.do"  // 컨트롤러단과 연결
+			,"dsDelete=dsDelete"		// 넥사(프론트) -> 자바(백단)로 넘겨주는 값
+			,""							// 넥사(프론트) <- 자바(백단) 넘겨주는 값
+			,""							// 파라미터 값
+			,"fnDeleteCallBack" 		// 콜백함수 호출
+			,true  						// 비동기
+		)
+	}
+	
+};
+
+// 삭제 콜백 함수
+this.fnDeleteCallBack = function(strSvcId, nErrorCode, strErrorMsg) {
+	// strSvcId = 트랜잭션의 별명이 일치할 경우 실행 
+	if (nErrorCode < 0) {
+		alert("삭제 실패");
+		return;
+	} 
+	
+	alert("삭제완료");
+	location.reload();
+}
+
+// 콜백함수 
+this.fnCallBack = function(strSvcID, nErrorCode, strErrorMag) {
+	 if(strSvcID == "selectList") {
+        
+        this.dsSearch.addRow();	
+    }
+};
+
+this.cmbSearch_onitemchanged = function(obj:nexacro.Combo,e:nexacro.ItemChangeEventInfo)
+{
+	
+};
+
+this.Form_Work_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.dsSearch.clearData();
+	
+	this.dsSearch.addRow();
+	
+	this.btnSearch_onclick();
+};
+
+this.cmbSearch_onkillfocus = function(obj:nexacro.Combo,e:nexacro.KillFocusEventInfo)
+{
+	this.dsSearch.saveXML();
+};
+
+this.edtSearch_onkillfocus = function(obj:nexacro.Edit,e:nexacro.KillFocusEventInfo)
+{
+	this.dsSearch.saveXML();
+};
+
+this.showPopup = function(objParam) {
+	popup = new nexacro.ChildFrame;
+	popup.init("popupwork", 0, 0, 800, 700, null, null, "FrameBase::Form_Sub.xfdl");
+	popup.set_dragmovetype('all');
+	popup.set_layered("true");
+	popup.set_autosize(true);
+	popup.set_showtitlebar("Popup Title");
+	popup.set_showstatusbar(false); 
+	popup.set_resizable(true);
+	popup.set_openalign("center middle");
+	popup.showModal(this.getOwnerFrame(), objParam, this, "fn_popupCallback", true);
+}
+
+this.fn_popupCallback = function (obj, nErrorCode, strErrorMsg) {
+
+	trace("=======================");
+
+	 this.btnSearch_onclick();
+}
+	
+this.grdList_oncelldblclick = function(obj:nexacro.Grid,e:nexacro.GridClickEventInfo)
+{	
+	var objParam = {"boardNo" : this.dsList.getColumn(this.dsList.rowposition, "BOARD_NO")}
+	
+	alert(objParam);
+	
+	this.showPopup(objParam);
+};
+
+this.btnCode_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+		this.go("FrameBase::Form_Code.xfdl");
+};
+
+]]></Script>
+    <Objects>
+      <Dataset id="dsSearchCombo">
+        <ColumnInfo>
+          <Column id="code" type="STRING" size="256"/>
+          <Column id="codeNm" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="codeNm">전체</Col>
+            <Col id="code">ALL</Col>
+          </Row>
+          <Row>
+            <Col id="codeNm">타이틀</Col>
+            <Col id="code">TITLE</Col>
+          </Row>
+          <Row>
+            <Col id="codeNm">내용</Col>
+            <Col id="code">CONT</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsList" useclientlayout="false">
+        <ColumnInfo>
+          <ConstColumn id="BOARD_NO" type="STRING" size="256"/>
+          <ConstColumn id="TITLE" type="STRING" size="256"/>
+          <ConstColumn id="CONT" type="STRING" size="256"/>
+          <ConstColumn id="WRITER" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsSearch">
+        <ColumnInfo>
+          <Column id="searchCmb" type="STRING" size="256"/>
+          <Column id="searchVal" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsDelete">
+        <ColumnInfo>
+          <Column id="BOARD_NO" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Bind>
+      <BindItem id="item0" compid="edtSearch" propid="value" datasetid="dsSearch" columnid="searchVal"/>
+      <BindItem id="item1" compid="cmbSearch" propid="value" datasetid="dsSearch" columnid="searchCmb"/>
+    </Bind>
+  </Form>
+</FDL>

@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Form_Work" width="1280" height="720" titletext="Form_Work" onload="Form_Work_onload">
+    <Layouts>
+      <Layout width="1280" height="720" screenid="Desktop_screen">
+        <Button id="btnReg" taborder="0" text="게시글 등록" left="414" top="376" width="112" height="48" onclick="btnReg_onclick"/>
+        <Grid id="grdBoard" taborder="1" left="42" top="130" width="502" height="214" binddataset="boardList">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="boardNum"/>
+                <Cell col="1" text="title"/>
+                <Cell col="2" text="content"/>
+                <Cell col="3" text="memId"/>
+                <Cell col="4" text="readCnt"/>
+                <Cell col="5" text="regDate"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:boardNum"/>
+                <Cell col="1" text="bind:title"/>
+                <Cell col="2" text="bind:content"/>
+                <Cell col="3" text="bind:memId"/>
+                <Cell col="4" text="bind:readCnt"/>
+                <Cell col="5" text="bind:regDate"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Static id="Static00" taborder="2" text="Nexacro 화면" left="58" top="37" width="172" height="60" font="bold 20px/normal &quot;Malgun Gothic&quot;"/>
+      </Layout>
+    </Layouts>
+    <Objects>
+      <Dataset id="boardList">
+        <ColumnInfo>
+          <Column id="boardNum" type="STRING" size="256"/>
+          <Column id="title" type="STRING" size="256"/>
+          <Column id="content" type="STRING" size="256"/>
+          <Column id="memId" type="STRING" size="256"/>
+          <Column id="readCnt" type="STRING" size="256"/>
+          <Column id="regDate" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Script type="xscript5.1"><![CDATA[
+this.Form_Work_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.transaction(
+        "getBoardList"
+        ,"DataSrv::getBoardList.do"
+        ,""                          // 보낼 DataSet 없음
+        ,"boardList=boardList"          // 서버의 boardList → 내 boardList에 담기
+        ,""                          // 파라미터 없음
+        ,"fnCallBack"
+    );
+};
+
+//콜백함수
+this.fnCallBack = function(strSvcId, nErrorCode, strErrorMsg)
+{
+    
+};
+this.btnReg_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var objParam = {
+		"boardNum" : ""
+	}
+	
+	this;
+};
+]]></Script>
+  </Form>
+</FDL>

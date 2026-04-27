@@ -1,0 +1,24 @@
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("Hello world");
+		
+		int a;
+		a = 1;
+		
+		long b = 1;
+		short aa = 0;
+		System.out.println("int a = " + a);
+		System.out.println("long b = " + b);
+		
+		
+		float c = 0.1f;
+		double d = 0.0;
+		
+		System.out.println("float c = " + c);
+		System.out.println("double d = " + d);
+	}
+
+}

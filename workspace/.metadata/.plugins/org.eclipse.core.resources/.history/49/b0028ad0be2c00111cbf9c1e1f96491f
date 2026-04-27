@@ -1,0 +1,49 @@
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("Hello world");
+		
+		int a;
+		a = 1;
+		
+		long b = 1;
+		short aa = 0;
+		System.out.println("int a = " + a);
+		System.out.println("long b = " + b);
+		
+		
+		float c = 0.1f;
+		double d = 1.0;
+		
+		System.out.println("float c = " + c);
+		System.out.println("double d = " + d);
+		
+		//8진수 > 0 ~ 7
+		int e = 05; //8진수 5
+		e = 075; //75 << 10진수, 8진수 61
+		
+		//16진수 0 ~ 9, a, b, c, d, e, f
+		int f = 0xAC; // 172
+		
+		System.out.println("int(octal) e =" + e);
+		System.out.println("int(hex) f = " + f);
+		
+		//사칙연산 연산자 + - * / % ++ --
+		// a = int b = long
+		System.out.println("a + b = " + (a + b));
+		System.out.println("a + d = " + (a + b));
+		System.out.println("a + f = " + (a + f));
+		System.out.println("a - b = " + (a - b));
+		System.out.println("a - d = " + (a - b));
+		System.out.println("a - f = " + (a - f));
+		
+		a = 7;
+		b = 4;
+		
+		System.out.println("a % b = " + (a % b));
+		System.out.println("b % a = " + (b % a));
+	}
+
+}

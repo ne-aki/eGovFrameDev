@@ -1,0 +1,12 @@
+127.0.0.1 - - [10/Apr/2026:09:02:07 +0900] "GET / HTTP/1.1" 404 807
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:23:49 +0900] "GET /nexaPj HTTP/1.1" 404 813
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:01 +0900] "GET /Practice HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:02 +0900] "GET /Practice/ HTTP/1.1" 404 1081
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:02 +0900] "GET /Practice/css/egovframework/sample.css;jsessionid=B78AB7CEDF2BAD365A24E45E12EF72CB HTTP/1.1" 200 10111
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:02 +0900] "GET /Practice/images/egovframework/example/error_bg.jpg HTTP/1.1" 404 1037
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:02 +0900] "GET /favicon.ico HTTP/1.1" 404 818
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:05 +0900] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 863
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:07 +0900] "GET /Practice/ HTTP/1.1" 404 1037
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:07 +0900] "GET /Practice/css/egovframework/sample.css HTTP/1.1" 200 10111
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:07 +0900] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 863
+0:0:0:0:0:0:0:1 - - [10/Apr/2026:12:24:07 +0900] "GET /Practice/images/egovframework/example/error_bg.jpg HTTP/1.1" 404 1037

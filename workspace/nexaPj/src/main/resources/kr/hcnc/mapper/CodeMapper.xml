@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.hcnc.mapper.CodeMapper">
+
+	<resultMap type="kr.hcnc.vo.CodeVO" id="code">
+		<id column="CODE" property="code" />
+		<result column="CODE_NM" property="codeNm"/>
+		<result column="REG_DT" property="regDt"/>
+		<result column="MOD_DT" property="modDt"/>
+	</resultMap>
+	
+	<select id="selectMstCode" resultMap="code">
+		SELECT CODE
+			, CODE_NM
+			, REG_DT
+			, MOD_DT
+		FROM HCNC.COM_CD_MST
+		ORDER BY REG_DT DESC
+	</select>
+	
+	<insert id="insertMstCode">
+		INSERT INTO HCNC.COM_CD_MST (
+			CODE
+			, CODE_NM
+		) VALUES (
+			#{code}
+			, #{codeNm}
+		)
+	</insert>
+	
+	<delete id="deleteMstCode">
+		DELETE FROM HCNC.COM_CD_MST
+		WHERE CODE = #{code}
+	</delete>
+	
+	<update id="updateMstCode">
+		UPDATE HCNC.COM_CD_MST
+		SET CODE_NM = #{codeNm}
+			,MOD_DT  = CURRENT_TIMESTAMP()
+		WHERE CODE  = #{code}
+	</update>
+	
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value=""/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="true"/>
+		<list key="findhistory">
+			<item value="2026-04-24 12:13:25,666  WARN \[org\.springframework\.web\.servlet\.PageNotFound\] No mapping found for HTTP request with URI \[/NexaPj2/egovSampleList\.do\] in DispatcherServlet with name &apos;action&apos;\R"/>
+			<item value="srv"/>
+			<item value="dataSrv"/>
+			<item value="nexa"/>
+			<item value="localhost"/>
+			<item value="locahost"/>
+			<item value="delete"/>
+			<item value="lis"/>
+			<item value="dsList"/>
+			<item value="select"/>
+			<item value="mapper"/>
+			<item value="code`"/>
+			<item value="code"/>
+			<item value="maven"/>
+			<item value="lombok"/>
+		</list>
+		<list key="replacehistory">
+			<item value="dsMstCode"/>
+			<item value="\&lt;c\:out value\=\&quot;\$\{$1\ }\&quot; \/\&gt;"/>
+			<item value="\&lt;c\:out value\=\&quot;\$\{$1\}\&quot; \/\&gt;"/>
+			<item value="\&lt;c\:out value\=\&quot;$1\&quot; \/\&gt;"/>
+			<item value="\&lt;c\:out value\=\&quot;\&quot; \/\&gt;"/>
+			<item value="\&lt;c\:out value\=\&quot;\$1\&quot; \/\&gt;"/>
+			<item value="\&lt;c\:out value=&quot;&quot; /&gt;"/>
+			<item value="&lt;c:out value=&quot;&quot; /&gt;"/>
+			<item value="&lt;c:out value"/>
+			<item value="&lt;"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="139"/>
+		<item key="DIALOG_Y_ORIGIN" value="469"/>
+		<item key="DIALOG_WIDTH" value="596"/>
+		<item key="DIALOG_HEIGHT" value="523"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+</section>

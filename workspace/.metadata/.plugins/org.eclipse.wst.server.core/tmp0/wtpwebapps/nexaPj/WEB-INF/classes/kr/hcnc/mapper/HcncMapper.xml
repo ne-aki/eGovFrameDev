@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.hcnc.mapper.HcncMapper">
+	
+	<select id="selectBoardList" parameterType="Map" resultType="Map">
+	     SELECT BOARD_NO
+	        , TITLE 
+	        , CONT
+	        , WRITER
+	        , MODIFIER
+	        , REG_DT
+	        , MOD_DT
+	        , 0 AS CHK
+	    FROM HCNC.HCNC_BOARD
+	    WHERE 1=1
+	    <if test="boardNo != null and boardNo != ''">
+	    AND BOARD_NO = #{boardNo}
+	    </if>
+		<if test="searchVal != null and searchVal != '' and searchVal != 'undefined'">
+		    <choose>
+		    	<when test="searchCmb == 'ALL'">
+		    	AND (
+		    		TITLE LIKE CONCAT('%', #{searchVal}, '%')
+		    	 OR CONT LIKE CONCAT('%', #{searchVal}, '%')
+		    	 )
+		    	</when>
+		    	<when test="searchCmb == 'TITLE'">
+		    	AND TITLE LIKE CONCAT('%', #{searchVal}, '%')
+		    	</when>
+		    	<when test="searchCmb == 'CONT'">
+		    	AND CONT LIKE CONCAT('%', #{searchVal}, '%')
+		    	</when>
+		    </choose>
+	    </if>
+	</select>
+	
+	<insert id="insertBoard" parameterType="Map" useGeneratedKeys="true" keyProperty="BOARD_NO">
+		INSERT INTO HCNC.HCNC_BOARD (TITLE, CONT, WRITER, MODIFIER, REG_DT) 
+		VALUES(#{TITLE}, #{CONT}, #{WRITER}, #{MODIFIER}, NOW())
+	</insert>
+	
+	<delete id="deleteBoard" parameterType="Map">
+		DELETE FROM HCNC.HCNC_BOARD 
+		WHERE BOARD_NO = #{BOARD_NO}
+	</delete>
+	
+	<update id="updateBoard" parameterType="Map">
+		UPDATE HCNC.HCNC_BOARD
+		SET TITLE 		= #{TITLE}
+		  , CONT 		= #{CONT}
+		  , MODIFIER 	= #{MODIFIER}
+		  , MOD_DT		= NOW()
+		WHERE BOARD_NO = #{BOARD_NO}
+	</update>
+	
+</mapper>

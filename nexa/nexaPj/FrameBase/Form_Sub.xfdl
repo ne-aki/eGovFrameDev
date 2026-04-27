@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Form_Sub" width="720" height="600" titletext="New Form" onload="Form_Sub_onload">
+    <Layouts>
+      <Layout height="600" mobileorientation="landscape" width="720">
+        <Edit id="editTitle" taborder="0" left="83" top="70" width="178" height="40" onchanged="editTitle_onchanged"/>
+        <Edit id="editWriter" taborder="1" left="83" top="140" width="178" height="40" enable="true" onchanged="editWriter_onchanged"/>
+        <Static id="title" taborder="2" text="제목" left="83" top="37" width="177" height="53" onclick="title_onclick"/>
+        <Static id="Static00" taborder="3" text="작성자" left="83" top="116" width="177" height="34"/>
+        <Static id="title00" taborder="4" text="컨텐츠" left="83" top="177" width="283" height="53" onclick="Static00_onclick"/>
+        <TextArea id="editCont" taborder="5" left="83" top="215" width="283" height="158"/>
+        <Button id="btnSave" taborder="6" text="저장" left="83" top="457" width="178" height="33" onclick="btnSave_onclick"/>
+        <Button id="btnDelete" taborder="7" text="삭제" left="83" top="501" width="178" height="33" onclick="btnDelete_onclick"/>
+        <Button id="btnBack" taborder="8" text="돌아가기" left="83" top="544" width="178" height="33" onclick="btnBack_onclick"/>
+        <Edit id="editModifier" taborder="9" left="83" top="407" width="178" height="40"/>
+        <Static id="Static00_00" taborder="10" text="수정자" left="83" top="383" width="177" height="34" onclick="Static00_00_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[	var boardNo = "";
+	
+	this.Form_Sub_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+	{		
+	    boardNo = this.parent.boardNo;
+	   
+	   // 부모요소의 boardNo가 없다면 
+		if(boardNo == "") {
+			// 기존의 Data의 값을 비운다.
+			this.dsBoard.clearData();
+			/*
+				빈 행을 하나 추가 해주는 이유는
+				화면의 컴포넌트에 dsBoard의 0번 row와 바인딩 되어 입력이 가능한 상태가 돤다.
+			*/ 
+			this.dsBoard.addRow();
+		} else {
+			this.editWriter.enable = false;
+			this.transaction( 
+					"selectList" 						// 서비스 ID
+					,"DataSrv::selectList.do" 			// 호출 URL http://localhost/nexaPj/
+					,"" 								// 데이터를 넘길 dataset ([nexa] 보내는 datasetId = [java]에서 받는 datasetId ''(공백)을 사용하여 여러개 처리)
+					,"dsBoard=dsList" 					// 데이터를 받을 dataset ([naxa] 받는 datasetId = [java]에서 보내는 datasetId ''(공백)을 사용하여 여러개 처리)
+					,"boardNo=" + this.parent.boardNo   // 파라미터로 넘길 값 (key=v)
+					,"fnCallBack"
+					, true
+					); 									// 함수 호출 콜백
+		}
+		
+	};
+
+	// 생성
+	this.btnSave_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+	{
+		// 입력값 검증
+		// 자릿수에 대해서 검증은 안함
+		// 단순하게 null이나 공백인지만 체크
+		boardNo = this.parent.boardNo;
+		
+		this.dsBoard.setColumn(0, "boardNo", this.parent.boardNo);
+		this.dsBoard.setColumn(0, "MODIFIER", this.editModifier.value);
+		
+		var title = this.editTitle.value;
+		var cont = this.editCont.value;
+		var writer = this.editWriter.value;	
+		var modifier = this.editModifier.value;	
+		
+		alert(modifier);
+		
+		if (title == undefined || title.trim() == "") {
+			alert("제목을 입력해주세요.");
+			this.editTitle.setFocus();
+			return;
+		}
+		
+		if (cont == undefined || cont.trim() == "") {
+			alert("내용을 입력해주세요.");
+			this.editCont.setFocus();
+			return;
+		}
+		
+		if (writer == undefined || writer.trim() == "") {
+			alert("작성자를 입력해주세요.");
+			this.editWriter.setFocus();
+			return;
+		}
+		
+		trace(this.parent.boardNo);
+		var serviceID = "";
+		var callUrl = "";
+		var callBackFn = "fnCallBack";
+		
+		if(this.parent.boardNo == "") {
+			serviceID = "insertBoard"
+			callUrl = "DataSrv::insertBoard.do"
+		} else {
+			serviceID = "updateBoard"
+			callUrl = "DataSrv::updateBoard.do"
+		}
+		
+		if (this.confirm("저장하시겠습니까?")) {
+			 this.transaction(serviceID 	// 서비스 ID
+					, callUrl				// 호출 URL http://localhost/nexaPj/
+					, "dsBoard=dsBoard" 	// 데이터를 넘길 dataset ([nexa] 보내는 datasetId = [java]에서 받는 datasetId ''(공백)을 사용하여 여러개 처리)
+					, "" 					// 데이터를 받을 dataset ([naxa] 받는 datasetId = [java]에서 보내는 datasetId ''(공백)을 사용하여 여러개 처리)
+					, ""
+					, callBackFn
+					, true
+					); 	
+		} 
+	};
+
+	// 콜백함수 
+	this.fnCallBack = function(strSvcID, nErrorCode, strErrorMag) {
+		
+		if (strSvcID == "insertBoard" || strSvcID == "updateBoard") {
+			alert("저장되었습니다.");
+			this.close();
+		} else if(strSvcID == "selectList") {
+			this.dsList.saveXML();
+		}
+		
+	};	
+
+	// 삭제
+	this.btnDelete_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+	{		
+	
+// 		if (this.confirm("삭제하시겠습니까?")) {
+// 		
+// 			this.dsBoard.setColumn(0, "boardNo", boardNo);
+// 		
+// // 			// dsDelete에 행 추가	
+// // 			var number = this.dsDelete.addRow();
+// // 			
+// // 			// 추가 된 행에 setColumn으로 데이터 추가
+// // 			this.dsDelete.setColumn(number, "BOARD_NO", boardNo)
+// 		
+// 			this.transaction(
+// 				 "deleteBoard" 				// 트랜잭션 별명
+// 				,"DataSrv::deleteBoard.do"  // 컨트롤러단과 연결
+// 				,"dsBoard=dsBoard"			// 넥사(프론트) -> 자바(백단)로 넘겨주는 값
+// 				,""							// 넥사(프론트) <- 자바(백단) 넘겨주는 값
+// 				,""							// 파라미터 값
+// 				,"fnDeleteCallBack" 		// 콜백함수 호출
+// 				,true  						// 비동기
+// 			)
+// 		}
+
+	var nRow = this.dsBoard.rowposition;
+   
+   if (nRow < 0) return;
+   
+   if(confirm("삭제하시겠습니까?")){
+      var boardNo = this.dsBoard.getColumn(nRow,"BOARD_NO");
+      
+      this.transaction(
+         "deleteBoard"
+         ,"DataSrv::deleteBoard.do"
+         ,""
+         ,""
+         ,"boardNo=" + boardNo
+         ,"fnCallback"
+      );
+   }
+		
+	};
+	
+// 삭제 콜백 함수
+this.fnDeleteCallBack = function(strSvcId, nErrorCode, strErrorMsg) {
+	
+	// strSvcId = 트랜잭션의 별명이 일치할 경우 실행 
+	if (nErrorCode < 0) {
+		alert("삭제 실패");
+		return;
+	} 
+	
+	alert("삭제완료");
+	location.reload();
+}
+
+	// 닫기
+	this.btnBack_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+	{
+		this.close();
+	};
+
+
+this.editWriter_onchanged = function(obj:nexacro.Edit,e:nexacro.ChangeEventInfo)
+{
+	
+};
+
+this.editTitle_onchanged = function(obj:nexacro.Edit,e:nexacro.ChangeEventInfo)
+{
+	
+};
+]]></Script>
+    <Objects>
+      <Dataset id="dsBoard">
+        <ColumnInfo>
+          <Column id="boardNo" type="STRING" size="256"/>
+          <Column id="TITLE" type="STRING" size="256"/>
+          <Column id="CONT" type="STRING" size="1000"/>
+          <Column id="WRITER" type="STRING" size="256"/>
+          <Column id="MODIFIER" type="STRING" size="256"/>
+          <Column id="REG_DT" type="STRING" size="256"/>
+          <Column id="MOD_DT" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Bind>
+      <BindItem id="item0" compid="editTitle" propid="value" datasetid="dsBoard" columnid="TITLE"/>
+      <BindItem id="item1" compid="editWriter" propid="value" datasetid="dsBoard" columnid="WRITER"/>
+      <BindItem id="item2" compid="editCont" propid="value" datasetid="dsBoard" columnid="CONT"/>
+      <BindItem id="item3" compid="editModifier" propid="value" datasetid="dsBoard" columnid="MODIFIER"/>
+    </Bind>
+  </Form>
+</FDL>

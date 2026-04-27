@@ -1,0 +1,76 @@
+package kr.hcnc.web;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.nexacro.uiadapter17.spring.core.annotation.ParamDataSet;
+import com.nexacro.uiadapter17.spring.core.annotation.ParamVariable;
+import com.nexacro.uiadapter17.spring.core.data.NexacroResult;
+
+import kr.hcnc.service.HcncService;
+
+@Controller
+public class HcncController {
+	
+	@Resource(name = "hcncService")
+	private HcncService hcncService;
+	
+	@RequestMapping(value = "/selectBoardList.do")
+	public NexacroResult selectBoardList() {
+		NexacroResult result = new NexacroResult();
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		result.addDataSet("dsBoardList", hcncService.selectBoardList(param));
+		return result;
+	}
+	
+	@RequestMapping(value = "/insertBoard.do")
+	public NexacroResult insertBoard(@ParamDataSet(name = "dsBoard") Map<String, Object> dsBoard) {
+		NexacroResult result = new NexacroResult();
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("title", dsBoard.get("title"));
+		param.put("cont", dsBoard.get("cont"));
+		param.put("writer", dsBoard.get("writer"));
+		param.put("modifier", dsBoard.get("modifier"));
+		param.put("boardType", dsBoard.get("boardType"));
+		param.put("category", dsBoard.get("category"));
+		hcncService.insertBoard(param);
+		return result;
+	}
+	
+	@RequestMapping(value = "/updateBoard.do")
+	public NexacroResult updateBoard(@ParamDataSet(name = "dsBoard") Map<String, Object> dsBoard) {
+		NexacroResult result = new NexacroResult();
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("title", dsBoard.get("title"));
+		param.put("cont", dsBoard.get("cont"));
+		param.put("writer", dsBoard.get("writer"));
+		param.put("modifier", dsBoard.get("modifier"));
+		param.put("boardType", dsBoard.get("boardType"));
+		param.put("category", dsBoard.get("category"));
+		hcncService.updateBoard(param);
+		return result;
+	}
+	
+	@RequestMapping(value = "/deleteBoard.do")
+	public NexacroResult deleteBoard(@ParamDataSet(name = "dsBoard") Map<String, Object> dsBoard) {
+		NexacroResult result = new NexacroResult();
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("boardNo", dsBoard.get("boardNo"));
+		hcncService.deleteBoard(param);
+		return result;
+	}
+	
+	@RequestMapping(value = "/selectCode.do")
+	public NexacroResult selectCode(@ParamVariable(name = "ptCode") String ptCode) {
+		NexacroResult result = new NexacroResult();
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("dsCode", hcncService.selectCode(param));
+		return result;
+	}
+
+}
