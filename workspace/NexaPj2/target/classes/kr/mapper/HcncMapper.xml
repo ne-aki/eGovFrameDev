@@ -54,6 +54,7 @@
 	<delete id="deleteBoard" parameterType="Map">
 		DELETE FROM hcnc2.HCNC_BOARD
 		WHERE BOARD_NO = #{boardNo}
+		AND DEL_YN = 'N'
 	</delete>
 	
 	<select id="selectCode" parameterType="Map" resultType="Map">
@@ -61,6 +62,20 @@
 			 , CODE_NM as codeNm
 		  FROM hcnc2.COM_CD_DTL
 		 WHERE PT_CODE = #{ptCode}
+	</select>
+	
+	<select id="selectList" parameterType="Map" resultType="Map">
+		SELECT BOARD_NO   as boardNo
+			 , TITLE	  as title
+			 , CONT		  as cont
+			 , WRITER	  as writer
+			 , MODIFIER	  as modifier
+			 , BOARD_TYPE as boardType
+			 , CATEGORY	  as category
+			 , REG_DT	  as regDt
+			 , MOD_DT	  as modDt
+		FROM hcnc2.HCNC_BOARD
+		WHERE BOARD_NO = #{boardNo}
 	</select>
 
 </mapper>

@@ -36,4 +36,8 @@ public class HcncService extends EgovAbstractServiceImpl {
 	public List<Map<String, Object>> selectCode(HashMap<String, Object> param) {
 		return hcncMapper.selectCode(param);
 	}
+	
+	public Map<String, Object> selectList(HashMap<String, Object> param) {
+		return hcncMapper.selectList(param);
+	}
 }

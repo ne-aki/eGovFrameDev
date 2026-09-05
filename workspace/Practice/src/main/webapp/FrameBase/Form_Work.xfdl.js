@@ -74,6 +74,7 @@
         this.fnCallBack = function(strSvcId, nErrorCode, strErrorMsg)
         {
 
+            this.alert("콜백테스트용");
         };
         this.btnReg_onclick = function(obj,e)
         {

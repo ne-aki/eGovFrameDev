@@ -6536,6 +6536,22 @@
         		imgcache[nexacro._getImageLocation("theme://images/img_WF_Vtrackbar_D.png")] = { width:5, height:8 };
         		imgcache[nexacro._getImageLocation("theme://images/mnu_WF_PopItemImg.png")] = { width:8, height:7 };
         		imgcache[nexacro._getImageLocation("theme://images/titlebar_icon.ico")] = { width:16, height:16 };
+        		imgcache[nexacro._getImageLocation("theme://theme.desktop.map.js")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme.mobile_large.map.js")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme.mobile_medium.map.js")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme.mobile_small.map.js")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_desktop_chrome.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_desktop_runtime.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_desktop_safari.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_mobile_large_chrome.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_mobile_large_runtime.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_mobile_large_safari.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_mobile_medium_chrome.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_mobile_medium_runtime.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_mobile_medium_safari.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_mobile_small_chrome.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_mobile_small_runtime.css")] = { width:0, height:0 };
+        		imgcache[nexacro._getImageLocation("theme://theme_mobile_small_safari.css")] = { width:0, height:0 };
 	};
 }
 )();

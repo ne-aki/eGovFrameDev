@@ -1,5 +1,0 @@
-package kr.hcnc.mapper;
-
-public interface HcncMapper {
-
-}

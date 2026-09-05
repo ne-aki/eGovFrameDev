@@ -1,6 +1,7 @@
 package kr.hcnc.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -58,20 +59,36 @@ public class HcncController {
 	}
 	
 	@RequestMapping(value = "/deleteBoard.do")
-	public NexacroResult deleteBoard(@ParamDataSet(name = "dsBoard") Map<String, Object> dsBoard) {
+	public NexacroResult deleteBoard(@ParamDataSet(name = "dsBoard") List<HashMap<String, Object>> dsBoard) {
 		NexacroResult result = new NexacroResult();
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("boardNo", dsBoard.get("boardNo"));
-		hcncService.deleteBoard(param);
+//		int rowCount = dsBoard.getRowCount();
+//		for(HashMap<String, Object> row : dsBoard) {
+//			String chk = (String) row.get("chk");
+//			if ("1".equals(chk)) {
+//				HashMap<String, Object> param = new HashMap<String, Object>();
+//				param.put("boardNo", dsBoard.get("boardNo"));
+//				hcncService.deleteBoard(param);
+//			}
+//		}
+		
 		return result;
 	}
 	
 	@RequestMapping(value = "/selectCode.do")
-	public NexacroResult selectCode(@ParamVariable(name = "ptCode") String ptCode) {
+	public NexacroResult selectCode(@ParamVariable(name = "ptCode", required = false) String ptCode) {
 		NexacroResult result = new NexacroResult();
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("ptCode", ptCode);
 		result.addDataSet("dsCode", hcncService.selectCode(param));
+		return result;
+	}
+	
+	@RequestMapping(value = "/selectList.do")
+	public NexacroResult selectList(@ParamVariable(name = "boardNo") String boardNo) {
+		NexacroResult result = new NexacroResult();
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("boardNo", boardNo);
+		result.addDataSet("dsBoard", hcncService.selectList(param));
 		return result;
 	}
 

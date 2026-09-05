@@ -50,7 +50,7 @@
 
             obj = new Grid("grdBoard","10","45","1260","400",null,null,null,null,null,null,this);
             obj.set_binddataset("dsBoardList");
-            obj._setContents("<Formats><Format id=\"default\"><Columns><Column size=\"60\"/><Column size=\"200\"/><Column size=\"300\"/><Column size=\"100\"/><Column size=\"100\"/></Columns><Rows><Row size=\"24\" band=\"head\"/><Row size=\"24\"/></Rows><Band id=\"head\"><Cell text=\"번호\"/><Cell col=\"1\" text=\"제목\"/><Cell col=\"2\" text=\"내용\"/><Cell col=\"3\" text=\"작성자\"/><Cell col=\"4\" text=\"등록일\"/></Band><Band id=\"body\"><Cell text=\"bind:boardNo\"/><Cell col=\"1\" text=\"bind:title\"/><Cell col=\"2\" text=\"bind:cont\"/><Cell col=\"3\" text=\"bind:writer\"/><Cell col=\"4\" text=\"bind:regDt\"/></Band></Format></Formats>");
+            obj._setContents("<Formats><Format id=\"default\"><Columns><Column size=\"30\"/><Column size=\"60\"/><Column size=\"200\"/><Column size=\"300\"/><Column size=\"100\"/><Column size=\"100\"/></Columns><Rows><Row size=\"24\" band=\"head\"/><Row size=\"24\"/></Rows><Band id=\"head\"><Cell text=\"\"/><Cell col=\"1\" text=\"번호\"/><Cell col=\"2\" text=\"제목\"/><Cell col=\"3\" text=\"내용\"/><Cell col=\"4\" text=\"작성자\"/><Cell col=\"5\" text=\"등록일\"/></Band><Band id=\"body\"><Cell edittype=\"checkbox\" text=\"bind:chk\"/><Cell col=\"1\" text=\"bind:boardNo\"/><Cell col=\"2\" text=\"bind:title\"/><Cell col=\"3\" text=\"bind:cont\"/><Cell col=\"4\" text=\"bind:writer\"/><Cell col=\"5\" text=\"bind:regDt\"/></Band></Format></Formats>");
             this.addChild(obj.name, obj);
             // Layout Functions
             //-- Default Layout : this
@@ -116,23 +116,28 @@
         	)
         };
 
+        //신규버튼
         this.btnInsert_onclick = function(obj,e)
-		{
-		    var objParam = {"boardNo": ""}
-		    this.showPopup(objParam);
-		};
-		
-		this.showPopup = function(objParam)
-		{
-		    var popup = new nexacro.ChildFrame;
-		    popup.init("popupWork", 0, 0, 800, 700, null, null, "FrameBase::Form_Sub.xfdl");
-		    popup.showModal(this.getOwnerFrame(), objParam, this, "fnPopupCallback", true);
-		};
-		
-		this.fnPopupCallback = function(strSvcID, nErrorCode, strErrorMsg)
-		{
-		    this.btnSearch_onclick();
-		};
+        {
+        	console.log("btnInsert 클릭됨");
+        	alert("클릭됨");
+        	var objParam = {"boardNo": ""}
+        	this.showPopup(objParam);
+        };
+
+        //팝업창
+        this.showPopup = function (objParam)
+        {
+        	var popup = new nexacro.ChildFrame;
+        	popup.init("popupWork", 0, 0, 800, 700, null, null, "FrameBase::Form_Sub.xfdl");
+        	popup.showModal(this.getOwnerFrame(), objParam, this, "fnPopupCallback", true);
+        };
+
+        //팝업콜백
+        this.fnPopupCallback = function (strSvcID, nErrorCode, strErrorMsg)
+        {
+        	this.btnSearch_onclick();
+        };
 
         this.btnSave_onclick = function(obj,e)
         {
@@ -147,9 +152,27 @@
         	)
         };
 
+        // 삭제버튼
         this.btnDelete_onclick = function(obj,e)
         {
-        	if (confirm("삭제하시겠습니까?"))
+        	var nCount = this.dsBoardList.rowcount;
+        	var bChecked = false;
+
+        	for(var i = 0; i < nCount; i++) {
+        		if (this.dsBoardList.getColumn(i, "chk") == "1")
+        		{
+        			bChecked = true;
+        			break;
+        		}
+        	}
+
+        	if (!bChecked)
+        	{
+        		alert("삭제할 항목을 선택해 주세요.");
+        		return;
+        	}
+
+        	if (confirm("선택한 항목을 삭제하시겠습니까?"))
         	{
         		this.transaction(
         			"deleteBoard"
@@ -163,6 +186,12 @@
         	}
         };
 
+        this.grdBoard_oncelldblclick = function(obj,e)
+        {
+        	var objParam = {"boardNo": this.dsBoardList.getColumn(this.dsBoardList.rowposition, "boardNo")};
+        	this.showPopup(objParam);
+        };
+
         });
         
         // Regist UI Components Event
@@ -173,6 +202,7 @@
             this.btnInsert.addEventHandler("onclick",this.btnInsert_onclick,this);
             this.btnSave.addEventHandler("onclick",this.btnSave_onclick,this);
             this.btnDelete.addEventHandler("onclick",this.btnDelete_onclick,this);
+            this.grdBoard.addEventHandler("oncelldblclick",this.grdBoard_oncelldblclick,this);
         };
         this.loadIncludeScript("Form_Work.xfdl");
         this.loadPreloadList();

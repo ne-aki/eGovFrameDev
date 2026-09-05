@@ -86,6 +86,14 @@
 		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 		<property name="paramName" value="language" />
 	</bean>
+	
+	
+	
+	<bean id="jsonView" class="org.springframework.web.servlet">
+	
+	</bean>
+	
+	
 
 	<bean
 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">

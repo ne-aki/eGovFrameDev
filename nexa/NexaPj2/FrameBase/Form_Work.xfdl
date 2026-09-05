@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Form_Work" width="1280" height="720" titletext="Form_Work" onload="Form_Work_onload">
+    <Layouts>
+      <Layout width="1280" height="720" screenid="Desktop_screen">
+        <Button id="btnSearch" text="조회" left="10" top="10" width="80" height="25" onclick="btnSearch_onclick"/>
+        <Button id="btnInsert" text="신규" left="100" top="10" width="80" height="25" onclick="btnInsert_onclick"/>
+        <Button id="btnSave" text="저장" left="190" top="10" width="80" height="25" onclick="btnSave_onclick"/>
+        <Button id="btnDelete" text="삭제" left="280" top="10" width="80" height="25" onclick="btnDelete_onclick"/>
+        <Grid id="grdBoard" left="10" top="45" width="1260" height="400" binddataset="dsBoardList" oncelldblclick="grdBoard_oncelldblclick">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="30"/>
+                <Column size="60"/>
+                <Column size="200"/>
+                <Column size="300"/>
+                <Column size="100"/>
+                <Column size="100"/>
+              </Columns>
+              <Rows>
+                <Row size="24" band="head"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text=""/>
+                <Cell col="1" text="번호"/>
+                <Cell col="2" text="제목"/>
+                <Cell col="3" text="내용"/>
+                <Cell col="4" text="작성자"/>
+                <Cell col="5" text="등록일"/>
+              </Band>
+              <Band id="body">
+                <Cell edittype="checkbox" text="bind:chk"/>
+                <Cell col="1" text="bind:boardNo"/>
+                <Cell col="2" text="bind:title"/>
+                <Cell col="3" text="bind:cont"/>
+                <Cell col="4" text="bind:writer"/>
+                <Cell col="5" text="bind:regDt"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+      </Layout>
+    </Layouts>
+    <Objects>
+      <Dataset id="dsBoardList">
+        <ColumnInfo>
+          <Column id="boardNo" type="STRING" size="256"/>
+          <Column id="title" type="STRING" size="256"/>
+          <Column id="cont" type="STRING" size="256"/>
+          <Column id="writer" type="STRING" size="256"/>
+          <Column id="modifier" type="STRING" size="256"/>
+          <Column id="boardType" type="STRING" size="256"/>
+          <Column id="category" type="STRING" size="256"/>
+          <Column id="regDt" type="STRING" size="256"/>
+          <Column id="modDt" type="STRING" size="256"/>
+          <Column id="chk" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsBoardType">
+        <ColumnInfo>
+          <Column id="code" type="STRING" size="256"/>
+          <Column id="codeNm" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsCategory">
+        <ColumnInfo>
+          <Column id="code" type="STRING" size="256"/>
+          <Column id="codeNm" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Script type="xscript5.1"><![CDATA[
+this.Form_Work_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.fnSearchCode();
+};
+
+//
+this.fnSearchCode = function() {
+	this.transaction(
+		"selectCode"
+		, "DataSrv::selectCode.do"
+		, ""
+		, "dsBoardType=dsBoardType dsCategory=dsCategory"
+		, ""
+		, "fnCallback"
+		, true
+	)
+}
+
+this.fnCallback = function (strSvcId, nErrorCode, strErrorMsg)
+{
+	if (strSvcId == "selectCode")
+	{
+		this.btnSearch_onclick();
+	}
+	else if (strSvcId == "insertBoard" || strSvcId == "deleteBoard")
+	{
+		this.btnSearch_onclick();
+	}
+};
+
+this.btnSearch_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.dsBoardList.clearData();
+	this.transaction(
+		"selectBoardList"
+		, "DataSrv::selectBoardList.do"
+		, ""
+		, "dsBoardList=dsBoardList"
+		, ""
+		, "fnCallback"
+		, true
+	)
+};
+
+//신규버튼
+this.btnInsert_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	console.log("btnInsert 클릭됨");
+	alert("클릭됨");
+	var objParam = {"boardNo": ""}
+	this.showPopup(objParam);
+};
+
+//팝업창
+this.showPopup = function (objParam)
+{
+	var popup = new nexacro.ChildFrame;
+	popup.init("popupWork", 0, 0, 800, 700, null, null, "FrameBase::Form_Sub.xfdl");
+	popup.showModal(this.getOwnerFrame(), objParam, this, "fnPopupCallback", true);
+};
+
+//팝업콜백
+this.fnPopupCallback = function (strSvcID, nErrorCode, strErrorMsg)
+{
+	this.btnSearch_onclick();
+};
+
+this.btnSave_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.transaction(
+		"insertBoard"
+		, "DataSrv::insertBoard.do"
+		, "dsBoard=dsBoardList"
+		, ""
+		, ""
+		, "fnCallback"
+		, true
+	)
+};
+
+// 삭제버튼
+this.btnDelete_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var nCount = this.dsBoardList.rowcount;
+	var bChecked = false;
+	
+	for(var i = 0; i < nCount; i++) {
+		if (this.dsBoardList.getColumn(i, "chk") == "1")
+		{
+			bChecked = true;
+			break;
+		}
+	}
+	
+	if (!bChecked)
+	{
+		alert("삭제할 항목을 선택해 주세요.");
+		return;
+	}
+	
+	if (confirm("선택한 항목을 삭제하시겠습니까?"))
+	{
+		this.transaction(
+			"deleteBoard"
+			, "DataSrv::deleteBoard.do"
+			, "dsBoard=dsBoardList"
+			, ""
+			, ""
+			, "fnCallback"
+			, true
+		)
+	}
+};
+
+this.grdBoard_oncelldblclick = function(obj:nexacro.Grid,e:nexacro.GridClickEventInfo)
+{
+	var objParam = {"boardNo": this.dsBoardList.getColumn(this.dsBoardList.rowposition, "boardNo")};
+	this.showPopup(objParam);
+};
+]]></Script>
+  </Form>
+</FDL>

@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Form_Sub" width="400" height="300" titletext="게시글" onload="Form_Sub_onload">
+    <Layouts>
+      <Layout height="300" width="400" screenid="Desktop_screen">
+        <Static id="stcTitle" taborder="0" text="제목" left="70" top="20" width="120" height="20"/>
+        <Edit id="edtTitle" taborder="1" left="200" top="20" width="140" height="20"/>
+        <Static id="stcCont" taborder="2" text="내용" left="70" top="50" width="120" height="20"/>
+        <TextArea id="taCont" taborder="8" left="200" top="50" width="140" height="50"/>
+        <Static id="stcWriter" taborder="4" text="작성자" left="70" top="110" width="120" height="20"/>
+        <Edit id="edtWriter" taborder="3" left="200" top="110" width="140" height="20"/>
+        <Static id="stcModifier" taborder="6" text="수정자" left="70" top="140" width="120" height="20"/>
+        <Edit id="edtModifier" taborder="5" left="200" top="140" width="140" height="20"/>
+        <Button id="btnSave" taborder="7" text="저장" left="70" top="210" width="60" height="30" onclick="btnSave_onclick"/>
+        <Button id="btnDelete" taborder="9" text="삭제" left="140" top="210" width="60" height="30" onclick="btnDelete_onclick"/>
+        <Button id="btnClose" taborder="10" text="닫기" left="210" top="210" width="60" height="30" onclick="btnClose_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+this.Form_Sub_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	if (this.parent.boardNo == "")
+	{
+		this.dsBoard.clearData();
+		this.dsBoard.addRow();
+	}
+	else
+	{
+		this.edtWriter.enable = false;
+		this.transaction(
+			"selectList"
+			, "DataSrv::selectList.do"
+			, ""
+			, "dsBoard=dsBoard"
+			, "boardNo=" + this.parent.boardNo
+			, "fnCallback"
+			, true
+		)
+	}
+};
+
+this.fnCallback = function(strSvcID, nErrorCode, strErrorMsg)
+{
+	if (strSvcID == "insertBoard" || strSvcID == "deleteBoard")
+	{
+		this.close();
+	}
+};
+
+this.btnSave_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var title = this.edtTitle.value;
+	var cont = this.taCont.value;
+	var writer = this.edtWriter.value;
+	var modifier = this.edtModifier.value;
+	
+	if (title == undefined || title.trim() == "")
+	{
+		alert("제목을 입력해 주세요");
+		this.edtTitle.setFocus();
+		return;
+	}
+	if (cont == undefined || cont.trim() == "")
+	{
+		alert("내용을 입력해 주세요");
+		this.taCont.setFocus();
+		return;
+	}
+	if (writer == undefined || writer.trim() == "")
+	{
+		alert("작성자를 입력해 주세요");
+		this.edtWriter.setFocus();
+		return;
+	}
+	if (modifier == undefined || modifier.trim() == "")
+	{
+		alert("수정자를 입력해 주세요");
+		this.edtModifier.setFocus();
+		return;
+	}
+	
+	var serviceID = "";
+	var callUrl = "";
+	if (this.parent.boardNo == "")
+	{
+		serviceID = "insertBoard"
+		callUrl = "DataSrv::insertBoard.do"
+	}
+	else
+	{
+		serviceID = "updateBoard"
+		callUrl = "DataSrv::updateBoard.do"
+	}
+	
+	if (confirm("저장하시겠습니까?"))
+	{
+		this.transaction(
+			serviceID
+			, callUrl
+			, "dsBoard=dsBoard"
+			, ""
+			, ""
+			, "fnCallback"
+			, true
+		);
+	}
+};
+
+this.btnDelete_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	if (this.dsBoard.getColumn(0, "boardNo") == undefined || this.dsBoard.getColumn(0, "boardNo") == "")
+	{
+		alert("게시글 번호가 존재하지 않습니다.");
+		return;
+	}
+	if (confirm("삭제하시겠습니까?"))
+	{
+		this.transaction(
+			"deleteBoard"
+			, "DataSrv::deleteBoard.do"
+			, "dsBoard=dsBoard"
+			, ""
+			, ""
+			, "fnCallback"
+			, true
+		);
+	}
+};
+
+this.btnClose_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.close();
+};
+]]></Script>
+    <Objects>
+      <Dataset id="dsBoard">
+        <ColumnInfo>
+          <Column id="boardNo" type="STRING" size="256"/>
+          <Column id="title" type="STRING" size="256"/>
+          <Column id="cont" type="STRING" size="256"/>
+          <Column id="writer" type="STRING" size="256"/>
+          <Column id="modifier" type="STRING" size="256"/>
+          <Column id="boardType" type="STRING" size="256"/>
+          <Column id="category" type="STRING" size="256"/>
+          <Column id="regDt" type="STRING" size="256"/>
+          <Column id="modDt" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Bind>
+      <BindItem id="item0" compid="edtTitle" propid="value" datasetid="dsBoard" columnid="title"/>
+      <BindItem id="item1" compid="taCont" propid="value" datasetid="dsBoard" columnid="cont"/>
+      <BindItem id="item2" compid="edtWriter" propid="value" datasetid="dsBoard" columnid="writer"/>
+      <BindItem id="item3" compid="edtModifier" propid="value" datasetid="dsBoard" columnid="modifier"/>
+    </Bind>
+  </Form>
+</FDL>

@@ -1,3 +1,7 @@
 eclipse.preferences.version=1
 externalMigrateFromAuthorizationDatabase/isMigrated=true
 migrateFromAuthorizationDatabase/isMigrated=true
+repositories/b0a27b07f997001111509f3c2a18939a=b0a27b07f997001111509f3c2a18939a;svn\://172.16.3.116/erp24;svn\://172.16.3.116/erp24;branches;tags;trunk;true;;;;false;;;0
+repositories/c00caa3fa99800111ef8afc14922b250=c00caa3fa99800111ef8afc14922b250;svn\://172.16.3.116/report24;svn\://172.16.3.116/report24;branches;tags;trunk;true;;;;false;;;0
+repositories/c0627e43a89800111ef8afc14922b250=c0627e43a89800111ef8afc14922b250;svn\://172.16.3.116/portal24;svn\://172.16.3.116/portal24;branches;tags;trunk;true;;;;false;;;0
+repositories/d04bf171a99800111ef8afc14922b250=d04bf171a99800111ef8afc14922b250;svn\://172.16.3.116/vue-monorepo24;svn\://172.16.3.116/vue-monorepo24;branches;tags;trunk;true;;;;false;;;0

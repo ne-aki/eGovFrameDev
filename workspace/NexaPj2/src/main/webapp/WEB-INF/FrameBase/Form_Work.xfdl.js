@@ -163,9 +163,15 @@
         			, ""
         			, ""
         			, "fnCallback"
-        			, true
+        			, true // javascript
         		)
         	}
+        };
+
+        this.grdBoard_oncelldblclick = function(obj,e)
+        {
+        	var objParam = {"boardNo": this.dsBoardList.getColumn(this.dsBoardList.rowposition, "boardNo")};
+        	this.showPopup(objParam);
         };
 
         });
@@ -178,6 +184,7 @@
             this.btnInsert.addEventHandler("onclick",this.btnInsert_onclick,this);
             this.btnSave.addEventHandler("onclick",this.btnSave_onclick,this);
             this.btnDelete.addEventHandler("onclick",this.btnDelete_onclick,this);
+            this.grdBoard.addEventHandler("oncelldblclick",this.grdBoard_oncelldblclick,this);
         };
         this.loadIncludeScript("Form_Work.xfdl");
         this.loadPreloadList();
